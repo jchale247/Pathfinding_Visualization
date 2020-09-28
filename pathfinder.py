@@ -7,8 +7,8 @@ WINDOW = pygame.display.set_mode((WIDTH, WIDTH))
 pygame.display.set_caption("Path Finding Algorithm Visualizer")
 
 RED = (255, 0, 0)
-BLUE = (0, 255, 0)
-GREEN = (0, 0, 255)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
@@ -86,13 +86,13 @@ class Square:
         return self.color == RED
     
     def is_open(self):
-        return self.color == YELLOW
+        return self.color == GREEN
 
     def is_obst(self):
         return self.color == BLACK
 
     def is_begin(self):
-        return self.color == GREEN
+        return self.color == BLUE
 
     def is_fin(self):
         return self.color == PURPLE
@@ -104,7 +104,7 @@ class Square:
         self.color = WHITE
     
     def make_open(self):
-        self.color = YELLOW
+        self.color = GREEN
 
     def make_closed(self):
         self.color = RED
@@ -113,13 +113,13 @@ class Square:
         self.color = BLACK
 
     def make_begin(self):
-        self.color = GREEN
+        self.color = BLUE
 
     def make_fin(self):
         self.color = PURPLE
     
     def make_path(self):
-        self.color = BLUE
+        self.color = YELLOW
 
     def draw(self, window):
         pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.width))
@@ -138,7 +138,18 @@ class Square:
         #Left
         if self.col > 0 and not grid[self.row][self.col - 1].is_obst():
             self.near.append(grid[self.row][self.col - 1])
-
+        #Down_Left
+        if self.row < self.rows_max - 1 and self.col > 0 and not grid[self.row + 1][self.col-1].is_obst() and not (grid[self.row + 1][self.col].is_obst() or grid[self.row][self.col - 1].is_obst()):
+            self.near.append(grid[self.row + 1][self.col-1])
+        #Down_Right
+        if self.row < self.rows_max - 1 and self.col < self.rows_max - 1 and not grid[self.row + 1][self.col+1].is_obst() and not (grid[self.row + 1][self.col].is_obst() or grid[self.row][self.col + 1].is_obst()):
+            self.near.append(grid[self.row + 1][self.col+1])
+        #Up_Left
+        if self.row > 0 and self.col > 0 and not grid[self.row - 1][self.col - 1].is_obst() and not (grid[self.row][self.col - 1].is_obst() or grid[self.row - 1][self.col].is_obst()):
+            self.near.append(grid[self.row - 1][self.col-1])
+        #Up_Right
+        if self.row > 0 and self.col < self.rows_max - 1 and not grid[self.row - 1][self.col + 1].is_obst() and not (grid[self.row - 1][self.col].is_obst() or grid[self.row][self.col + 1].is_obst()):
+            self.near.append(grid[self.row - 1][self.col+1])
     def __lt__(self, other):
         return False
 
